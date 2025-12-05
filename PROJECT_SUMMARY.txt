@@ -1,0 +1,239 @@
+================================================================================
+                         eChampz API - Project Summary
+================================================================================
+
+PROJECT INFO
+--------------------------------------------------------------------------------
+Path:           C:\laragon\www\eChampz-api
+GitHub:         https://github.com/FeRoTAITEN/eChampz
+Framework:      Laravel 12.41.1
+PHP:            8.3.26
+Database:       SQLite (development) / MySQL (production)
+Authentication: Laravel Sanctum
+Team:           Turki & Hashim
+
+================================================================================
+HOW TO RUN
+================================================================================
+
+# Set PATH (PowerShell)
+$env:Path = "C:\laragon\bin\git\bin;C:\laragon\bin\php\php-8.3.26-Win32-vs16-x64;C:\laragon\bin\composer;" + $env:Path
+
+# Go to project
+cd C:\laragon\www\eChampz-api
+
+# Run server
+php artisan serve
+
+# Run tests
+php artisan test
+
+# Run migrations
+php artisan migrate
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+eChampz-api/
+├── app/
+│   ├── Enums/
+│   │   └── UserRole.php                 # gamer, recruiter
+│   ├── Http/
+│   │   ├── Controllers/Api/V1/
+│   │   │   ├── AuthController.php       # register, login, logout
+│   │   │   ├── BaseController.php       # API response helpers
+│   │   │   ├── EmailVerificationController.php
+│   │   │   └── PasswordResetController.php
+│   │   └── Middleware/
+│   │       ├── EnsureEmailIsVerified.php
+│   │       └── RoleMiddleware.php
+│   ├── Models/
+│   │   ├── EmailVerificationCode.php
+│   │   └── User.php
+│   └── Traits/
+│       └── ApiResponse.php
+├── database/
+│   └── migrations/
+├── routes/
+│   └── api.php
+└── tests/
+    └── Feature/
+        ├── AuthenticationTest.php
+        ├── EmailVerificationTest.php
+        ├── PasswordResetTest.php
+        └── RoleTest.php
+
+================================================================================
+API ENDPOINTS
+================================================================================
+
+PUBLIC ROUTES (No Authentication)
+--------------------------------------------------------------------------------
+GET     /api/health                      Health check
+POST    /api/v1/register                 Register new user
+POST    /api/v1/login                    Login
+GET     /api/v1/roles                    Get available roles
+
+PASSWORD RESET
+--------------------------------------------------------------------------------
+POST    /api/v1/password/forgot          Request reset code
+POST    /api/v1/password/verify-code     Verify code
+POST    /api/v1/password/reset           Reset password
+
+AUTHENTICATED ROUTES
+--------------------------------------------------------------------------------
+GET     /api/v1/user                     Get current user
+POST    /api/v1/logout                   Logout
+POST    /api/v1/logout-all               Logout from all devices
+
+EMAIL VERIFICATION
+--------------------------------------------------------------------------------
+POST    /api/v1/email/send-verification  Send verification code
+POST    /api/v1/email/verify             Verify email
+GET     /api/v1/email/status             Get verification status
+
+ROLE-BASED ROUTES (Requires verified email)
+--------------------------------------------------------------------------------
+GET     /api/v1/gamer                    Gamer dashboard (role: gamer)
+GET     /api/v1/recruiter                Recruiter dashboard (role: recruiter)
+
+================================================================================
+COMPLETED FEATURES
+================================================================================
+
+#   Feature                              Tests
+1   User Registration & Login            6
+2   Role Selection (Gamer/Recruiter)     8
+3   Password Reset & Recovery            10
+4   Email Verification                   10
+    ----------------------------------------
+    TOTAL                                37 tests passing
+
+================================================================================
+REQUEST/RESPONSE EXAMPLES
+================================================================================
+
+REGISTER
+--------------------------------------------------------------------------------
+POST /api/v1/register
+{
+    "name": "Player Name",
+    "email": "player@example.com",
+    "password": "password123",
+    "password_confirmation": "password123",
+    "role": "gamer"
+}
+
+Response (201):
+{
+    "success": true,
+    "message": "User registered successfully",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "Player Name",
+            "email": "player@example.com",
+            "role": "gamer"
+        },
+        "token": "1|abc123...",
+        "token_type": "Bearer"
+    }
+}
+
+LOGIN
+--------------------------------------------------------------------------------
+POST /api/v1/login
+{
+    "email": "player@example.com",
+    "password": "password123"
+}
+
+Response (200):
+{
+    "success": true,
+    "message": "Login successful",
+    "data": {
+        "user": { ... },
+        "token": "1|abc123...",
+        "token_type": "Bearer"
+    }
+}
+
+PASSWORD FORGOT
+--------------------------------------------------------------------------------
+POST /api/v1/password/forgot
+{
+    "email": "player@example.com"
+}
+
+POST /api/v1/password/verify-code
+{
+    "email": "player@example.com",
+    "code": "123456"
+}
+
+POST /api/v1/password/reset
+{
+    "email": "player@example.com",
+    "reset_token": "abc123...",
+    "password": "newpassword123",
+    "password_confirmation": "newpassword123"
+}
+
+EMAIL VERIFICATION
+--------------------------------------------------------------------------------
+POST /api/v1/email/send-verification
+Authorization: Bearer {token}
+
+POST /api/v1/email/verify
+Authorization: Bearer {token}
+{
+    "code": "123456"
+}
+
+================================================================================
+MIDDLEWARES
+================================================================================
+
+auth:sanctum     Requires authentication
+verified         Requires verified email
+role:gamer       Only for gamers
+role:recruiter   Only for recruiters
+
+================================================================================
+EXPIRATION TIMES
+================================================================================
+
+Email Verification Code:    30 minutes
+Password Reset Code:        60 minutes
+Password Reset Token:       15 minutes
+Rate Limiting:              60 requests/minute
+
+================================================================================
+GIT COMMITS HISTORY
+================================================================================
+
+1. Initial commit: Laravel 12 API setup
+2. feat(api): setup API-only Laravel with Sanctum authentication
+3. feat(roles): add Gamer/Recruiter role selection
+4. feat(auth): add password reset & recovery flow
+5. feat(auth): add email verification system
+
+================================================================================
+FUTURE FEATURES (TODO)
+================================================================================
+
+[ ] API Key for authorized apps
+[ ] CORS Configuration
+[ ] Gamer Profile
+[ ] Recruiter Profile
+[ ] Tournaments System
+[ ] Teams Management
+[ ] Notifications
+[ ] Payment Integration
+
+================================================================================
+                              END OF SUMMARY
+================================================================================
+

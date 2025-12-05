@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 // API Version 1
 Route::prefix('v1')->group(function () {
-    
+
     // Public routes (no authentication required)
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -31,7 +31,7 @@ Route::prefix('v1')->group(function () {
 
     // Authenticated routes (but email may not be verified)
     Route::middleware('auth:sanctum')->group(function () {
-        
+
         // Auth routes
         Route::get('/user', [AuthController::class, 'user']);
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -46,7 +46,7 @@ Route::prefix('v1')->group(function () {
 
         // Routes that require verified email
         Route::middleware('verified')->group(function () {
-            
+
             // Gamer-only routes
             Route::middleware('role:gamer')->prefix('gamer')->group(function () {
                 Route::get('/', fn() => response()->json(['success' => true, 'message' => 'Gamer dashboard']));
@@ -57,7 +57,7 @@ Route::prefix('v1')->group(function () {
                 Route::get('/', fn() => response()->json(['success' => true, 'message' => 'Recruiter dashboard']));
             });
         });
-        
+
     });
 });
 
