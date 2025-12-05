@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\UserRole;
+use App\Models\EmailVerificationCode;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,6 @@ class AuthController extends BaseController
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', new Enum(UserRole::class)],
@@ -30,7 +31,6 @@ class AuthController extends BaseController
         }
 
         $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
@@ -38,11 +38,22 @@ class AuthController extends BaseController
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $this->createdResponse([
+        // Auto-send verification OTP
+        $otpData = $this->generateAndSendOTP($user);
+
+        $responseData = [
             'user' => $user,
             'token' => $token,
             'token_type' => 'Bearer',
-        ], 'User registered successfully');
+            'verification_required' => true,
+        ];
+
+        // Include OTP code in development mode
+        if (app()->environment(['local', 'testing'])) {
+            $responseData['code'] = $otpData['code'];
+        }
+
+        return $this->createdResponse($responseData, 'User registered. Please verify your email.');
     }
 
     /**
@@ -66,11 +77,26 @@ class AuthController extends BaseController
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $this->successResponse([
+        $responseData = [
             'user' => $user,
             'token' => $token,
             'token_type' => 'Bearer',
-        ], 'Login successful');
+        ];
+
+        // If user is not verified, auto-send OTP
+        if (!$user->hasVerifiedEmail()) {
+            $otpData = $this->generateAndSendOTP($user);
+            $responseData['verification_required'] = true;
+
+            // Include OTP code in development mode
+            if (app()->environment(['local', 'testing'])) {
+                $responseData['code'] = $otpData['code'];
+            }
+
+            return $this->successResponse($responseData, 'Please verify your email to continue.');
+        }
+
+        return $this->successResponse($responseData, 'Login successful');
     }
 
     /**
@@ -114,5 +140,29 @@ class AuthController extends BaseController
         });
 
         return $this->successResponse($roles);
+    }
+
+    /**
+     * Generate and send OTP for email verification
+     */
+    private function generateAndSendOTP(User $user): array
+    {
+        // Delete any existing codes
+        EmailVerificationCode::where('user_id', $user->id)->delete();
+
+        // Generate a 6-digit code
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        // Store the code
+        EmailVerificationCode::create([
+            'user_id' => $user->id,
+            'code' => $code,
+            'expires_at' => Carbon::now()->addMinutes(30),
+        ]);
+
+        // TODO: In production, send email with the code
+        // Mail::to($user->email)->send(new VerificationCodeMail($code));
+
+        return ['code' => $code];
     }
 }
