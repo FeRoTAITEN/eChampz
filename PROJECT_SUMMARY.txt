@@ -210,28 +210,6 @@ Password Reset Code:        60 minutes
 Password Reset Token:       15 minutes
 Rate Limiting:              60 requests/minute
 
-================================================================================
-GIT COMMITS HISTORY
-================================================================================
-
-1. Initial commit: Laravel 12 API setup
-2. feat(api): setup API-only Laravel with Sanctum authentication
-3. feat(roles): add Gamer/Recruiter role selection
-4. feat(auth): add password reset & recovery flow
-5. feat(auth): add email verification system
-
-================================================================================
-FUTURE FEATURES (TODO)
-================================================================================
-
-[ ] API Key for authorized apps
-[ ] CORS Configuration
-[ ] Gamer Profile
-[ ] Recruiter Profile
-[ ] Tournaments System
-[ ] Teams Management
-[ ] Notifications
-[ ] Payment Integration
 
 ================================================================================
                               END OF SUMMARY
