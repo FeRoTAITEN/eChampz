@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,22 +29,33 @@ Route::prefix('v1')->group(function () {
         Route::post('/reset', [PasswordResetController::class, 'resetPassword']);
     });
 
-    // Protected routes (authentication required)
+    // Authenticated routes (but email may not be verified)
     Route::middleware('auth:sanctum')->group(function () {
         
         // Auth routes
         Route::get('/user', [AuthController::class, 'user']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/logout-all', [AuthController::class, 'logoutAll']);
-        
-        // Gamer-only routes
-        Route::middleware('role:gamer')->prefix('gamer')->group(function () {
-            // Add gamer-specific routes here
+
+        // Email verification routes
+        Route::prefix('email')->group(function () {
+            Route::post('/send-verification', [EmailVerificationController::class, 'sendCode']);
+            Route::post('/verify', [EmailVerificationController::class, 'verify']);
+            Route::get('/status', [EmailVerificationController::class, 'status']);
         });
 
-        // Recruiter-only routes
-        Route::middleware('role:recruiter')->prefix('recruiter')->group(function () {
-            // Add recruiter-specific routes here
+        // Routes that require verified email
+        Route::middleware('verified')->group(function () {
+            
+            // Gamer-only routes
+            Route::middleware('role:gamer')->prefix('gamer')->group(function () {
+                Route::get('/', fn() => response()->json(['success' => true, 'message' => 'Gamer dashboard']));
+            });
+
+            // Recruiter-only routes
+            Route::middleware('role:recruiter')->prefix('recruiter')->group(function () {
+                Route::get('/', fn() => response()->json(['success' => true, 'message' => 'Recruiter dashboard']));
+            });
         });
         
     });
