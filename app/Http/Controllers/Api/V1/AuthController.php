@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Enum;
 
 class AuthController extends BaseController
 {
@@ -20,6 +22,7 @@ class AuthController extends BaseController
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', new Enum(UserRole::class)],
         ]);
 
         if ($validator->fails()) {
@@ -30,6 +33,7 @@ class AuthController extends BaseController
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -96,5 +100,19 @@ class AuthController extends BaseController
 
         return $this->successResponse(null, 'Logged out from all devices successfully');
     }
-}
 
+    /**
+     * Get available roles
+     */
+    public function roles(): JsonResponse
+    {
+        $roles = collect(UserRole::cases())->map(function ($role) {
+            return [
+                'value' => $role->value,
+                'label' => $role->label(),
+            ];
+        });
+
+        return $this->successResponse($roles);
+    }
+}

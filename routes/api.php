@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group.
+| API Version 1 - All routes prefixed with /api/v1
 |
 */
 
@@ -20,6 +18,7 @@ Route::prefix('v1')->group(function () {
     // Public routes (no authentication required)
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/roles', [AuthController::class, 'roles']);
 
     // Protected routes (authentication required)
     Route::middleware('auth:sanctum')->group(function () {
@@ -28,6 +27,16 @@ Route::prefix('v1')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+        
+        // Gamer-only routes
+        Route::middleware('role:gamer')->prefix('gamer')->group(function () {
+            // Add gamer-specific routes here
+        });
+
+        // Recruiter-only routes
+        Route::middleware('role:recruiter')->prefix('recruiter')->group(function () {
+            // Add recruiter-specific routes here
+        });
         
     });
 });

@@ -20,6 +20,7 @@ class AuthenticationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
+            'role' => 'gamer',
         ]);
 
         $response->assertStatus(201)

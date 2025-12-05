@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,6 +45,35 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
         ];
+    }
+
+    /**
+     * Check if user is a gamer
+     */
+    public function isGamer(): bool
+    {
+        return $this->role === UserRole::GAMER;
+    }
+
+    /**
+     * Check if user is a recruiter
+     */
+    public function isRecruiter(): bool
+    {
+        return $this->role === UserRole::RECRUITER;
+    }
+
+    /**
+     * Check if user has specific role
+     */
+    public function hasRole(UserRole|string $role): bool
+    {
+        if (is_string($role)) {
+            $role = UserRole::from($role);
+        }
+
+        return $this->role === $role;
     }
 }
