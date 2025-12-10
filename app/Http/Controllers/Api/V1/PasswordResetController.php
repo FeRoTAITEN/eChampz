@@ -19,13 +19,19 @@ class PasswordResetController extends BaseController
     public function forgotPassword(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'exists:users,email'],
-        ], [
-            'email.exists' => 'We could not find an account with that email address.',
+            'email' => ['required', 'string', 'email:rfc,dns'],
         ]);
 
         if ($validator->fails()) {
             return $this->validationErrorResponse($validator->errors());
+        }
+
+        // If the user does not exist, return a generic success to avoid account enumeration
+        $userExists = User::where('email', $request->email)->exists();
+        if (!$userExists) {
+            return $this->successResponse([
+                'message' => 'If an account exists for this email, a reset code has been sent.',
+            ], 'Password reset code sent successfully');
         }
 
         // Delete any existing tokens for this email
@@ -61,7 +67,7 @@ class PasswordResetController extends BaseController
     public function verifyCode(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email:rfc,dns'],
             'code' => ['required', 'string', 'size:6'],
         ]);
 
@@ -110,7 +116,7 @@ class PasswordResetController extends BaseController
     public function resetPassword(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email:rfc,dns'],
             'reset_token' => ['required', 'string'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);

@@ -1,0 +1,123 @@
+{
+  "info": {
+    "name": "Onboarding",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Onboarding flow: name, birthday, represent (recruiter)"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Status",
+      "item": [
+        {
+          "name": "Get Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "onboarding", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Name",
+      "item": [
+        {
+          "name": "Submit Name",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Player Name\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/name",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "onboarding", "name"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Birthday",
+      "item": [
+        {
+          "name": "Submit Birthday",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"day\": 12,\n  \"month\": 3,\n  \"year\": 2000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/birthday",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "onboarding", "birthday"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Represent (Recruiter)",
+      "item": [
+        {
+          "name": "Represent - Organization",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"organization\",\n  \"organization_name\": \"Team X\",\n  \"position\": \"Manager\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/represent",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "onboarding", "represent"]
+            }
+          }
+        },
+        {
+          "name": "Represent - Freelancer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"freelancer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/onboarding/represent",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "onboarding", "represent"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

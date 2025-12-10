@@ -25,6 +25,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'date_of_birth',
+        'represent_type',
+        'organization_name',
+        'position',
+        'onboarding_completed_at',
+        'xp_total',
     ];
 
     /**
@@ -46,6 +52,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'onboarding_completed_at' => 'datetime',
+            'date_of_birth' => 'date',
             'password' => 'hashed',
             'role' => UserRole::class,
         ];

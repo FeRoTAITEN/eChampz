@@ -1,0 +1,272 @@
+{
+  "info": {
+    "name": "Authentication & Access",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - Authentication, roles, verification, and password recovery"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Player Name\",\n  \"email\": \"player@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"gamer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"player@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "login"]
+            }
+          }
+        },
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Password Reset",
+      "item": [
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"player@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/password/forgot",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "password", "forgot"]
+            }
+          }
+        },
+        {
+          "name": "Verify Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"player@example.com\",\n  \"code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/password/verify-code",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "password", "verify-code"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"player@example.com\",\n  \"reset_token\": \"<from verify-code>\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/password/reset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "password", "reset"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authenticated",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Logout All",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/logout-all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "logout-all"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email Verification",
+      "item": [
+        {
+          "name": "Send Verification Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/email/send-verification",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "email", "send-verification"]
+            }
+          }
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/email/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "email", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Verification Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/email/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "email", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Role Protected",
+      "item": [
+        {
+          "name": "Gamer Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/gamer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "gamer"]
+            }
+          }
+        },
+        {
+          "name": "Recruiter Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,8 @@ class AuthController extends BaseController
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', new Enum(UserRole::class)],
         ]);
@@ -31,6 +32,7 @@ class AuthController extends BaseController
         }
 
         $user = User::create([
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
@@ -62,7 +64,7 @@ class AuthController extends BaseController
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email:rfc,dns'],
             'password' => ['required', 'string'],
         ]);
 

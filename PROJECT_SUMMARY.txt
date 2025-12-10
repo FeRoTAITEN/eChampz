@@ -86,6 +86,10 @@ AUTHENTICATED ROUTES
 GET     /api/v1/user                     Get current user
 POST    /api/v1/logout                   Logout
 POST    /api/v1/logout-all               Logout from all devices
+GET     /api/v1/onboarding/status       Onboarding progress
+POST    /api/v1/onboarding/name         Save name
+POST    /api/v1/onboarding/birthday     Save birthday
+POST    /api/v1/onboarding/represent    Save recruiter representation
 
 EMAIL VERIFICATION
 --------------------------------------------------------------------------------
