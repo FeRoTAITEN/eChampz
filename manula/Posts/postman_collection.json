@@ -1,0 +1,160 @@
+{
+  "info": {
+    "name": "Posts & Engagement",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - Posts, mentions, game tags, and engagement"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Feed",
+      "item": [
+        {
+          "name": "Get Feed - Global",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts?type=global&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts"],
+              "query": [
+                { "key": "type", "value": "global" },
+                { "key": "per_page", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Feed - Following",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts?type=following",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts"],
+              "query": [
+                { "key": "type", "value": "following" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Post",
+      "item": [
+        {
+          "name": "Create Text Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hey @john_doe check this out! @jane_smith too.\",\n  \"type\": \"text\",\n  \"game_ids\": [1, 2]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Create Post with Media",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Check out this amazing play! @pro_gamer\",\n  \"type\": \"image\",\n  \"game_ids\": [1],\n  \"media\": [\n    {\n      \"type\": \"image\",\n      \"url\": \"https://example.com/image1.jpg\",\n      \"thumbnail_url\": \"https://example.com/thumb1.jpg\"\n    },\n    {\n      \"type\": \"image\",\n      \"url\": \"https://example.com/image2.jpg\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Post",
+      "item": [
+        {
+          "name": "Get Single Post",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Post",
+      "item": [
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Updated content with @new_mention\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Post",
+      "item": [
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "posts", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
+

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\OnboardingController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
+use App\Http\Controllers\Api\V1\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +56,15 @@ Route::prefix('v1')->group(function () {
 
         // Routes that require verified email
         Route::middleware('verified')->group(function () {
+
+            // Posts routes
+            Route::prefix('posts')->group(function () {
+                Route::get('/', [PostController::class, 'index']); // Feed
+                Route::post('/', [PostController::class, 'store']); // Create
+                Route::get('/{id}', [PostController::class, 'show']); // Get single
+                Route::put('/{id}', [PostController::class, 'update']); // Update
+                Route::delete('/{id}', [PostController::class, 'destroy']); // Delete
+            });
 
             // Gamer-only routes
             Route::middleware('role:gamer')->prefix('gamer')->group(function () {

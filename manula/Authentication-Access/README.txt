@@ -11,8 +11,11 @@ Base URL
 
 Public Endpoints
 - POST /api/v1/register
-  body: name, email, password, password_confirmation, role (gamer|recruiter)
-  notes: sends verification code automatically; in local/testing the code is returned in response; email must pass RFC+DNS check.
+  body: name, username, email, password, password_confirmation, role (gamer|recruiter)
+  notes: 
+    - username: required, unique, 3-20 characters, alphanumeric and underscore only (regex: /^[a-zA-Z0-9_]+$/)
+    - sends verification code automatically; in local/testing the code is returned in response
+    - email must pass RFC+DNS check
 
 - POST /api/v1/login
   body: email, password

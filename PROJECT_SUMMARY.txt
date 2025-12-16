@@ -44,13 +44,21 @@ eChampz-api/
 │   │   │   ├── AuthController.php       # register, login, logout
 │   │   │   ├── BaseController.php       # API response helpers
 │   │   │   ├── EmailVerificationController.php
-│   │   │   └── PasswordResetController.php
+│   │   │   ├── OnboardingController.php
+│   │   │   ├── PasswordResetController.php
+│   │   │   └── PostController.php       # posts CRUD, mentions, game tags
 │   │   └── Middleware/
 │   │       ├── EnsureEmailIsVerified.php
 │   │       └── RoleMiddleware.php
 │   ├── Models/
 │   │   ├── EmailVerificationCode.php
+│   │   ├── Game.php
+│   │   ├── Post.php
+│   │   ├── PostMedia.php
+│   │   ├── PostMention.php
 │   │   └── User.php
+│   ├── Services/
+│   │   └── MentionParser.php            # Parse and validate @mentions
 │   └── Traits/
 │       └── ApiResponse.php
 ├── database/
@@ -71,7 +79,7 @@ API ENDPOINTS
 PUBLIC ROUTES (No Authentication)
 --------------------------------------------------------------------------------
 GET     /api/health                      Health check
-POST    /api/v1/register                 Register new user
+POST    /api/v1/register                 Register new user (requires username)
 POST    /api/v1/login                    Login
 GET     /api/v1/roles                    Get available roles
 
@@ -97,6 +105,14 @@ POST    /api/v1/email/send-verification  Send verification code
 POST    /api/v1/email/verify             Verify email
 GET     /api/v1/email/status             Get verification status
 
+POSTS API (Requires verified email)
+--------------------------------------------------------------------------------
+GET     /api/v1/posts                    Get feed (global/following)
+POST    /api/v1/posts                    Create post
+GET     /api/v1/posts/{id}               Get single post
+PUT     /api/v1/posts/{id}               Update post (owner only)
+DELETE  /api/v1/posts/{id}               Delete post (owner only)
+
 ROLE-BASED ROUTES (Requires verified email)
 --------------------------------------------------------------------------------
 GET     /api/v1/gamer                    Gamer dashboard (role: gamer)
@@ -111,6 +127,8 @@ COMPLETED FEATURES
 2   Role Selection (Gamer/Recruiter)     8
 3   Password Reset & Recovery            10
 4   Email Verification                   10
+5   Posts & Engagement                    -
+6   Mentions & Game Tags                 -
     ----------------------------------------
     TOTAL                                37 tests passing
 
@@ -123,25 +141,33 @@ REGISTER
 POST /api/v1/register
 {
     "name": "Player Name",
+    "username": "player_name",
     "email": "player@example.com",
     "password": "password123",
     "password_confirmation": "password123",
     "role": "gamer"
 }
 
+Notes:
+- username: required, 3-20 characters, unique, alphanumeric and underscore only
+- Username format: /^[a-zA-Z0-9_]+$/
+
 Response (201):
 {
     "success": true,
-    "message": "User registered successfully",
+    "message": "User registered. Please verify your email.",
     "data": {
         "user": {
             "id": 1,
             "name": "Player Name",
+            "username": "player_name",
             "email": "player@example.com",
             "role": "gamer"
         },
         "token": "1|abc123...",
-        "token_type": "Bearer"
+        "token_type": "Bearer",
+        "verification_required": true,
+        "code": "123456"
     }
 }
 
