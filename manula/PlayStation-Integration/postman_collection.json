@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "PlayStation Integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - PlayStation account linking and game data sync"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" },
+    { "key": "npsso_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Account Status",
+      "item": [
+        {
+          "name": "Get PlayStation Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/playstation/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "playstation", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Link Account",
+      "item": [
+        {
+          "name": "Link PlayStation Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"npsso_token\": \"{{npsso_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/playstation/link",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "playstation", "link"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sync",
+      "item": [
+        {
+          "name": "Sync Games from PlayStation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/playstation/sync",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "playstation", "sync"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "item": [
+        {
+          "name": "Get All Games",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/playstation/games",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "playstation", "games"]
+            }
+          }
+        },
+        {
+          "name": "Add Game Manually",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Red Dead Redemption 2\",\n  \"playtime_hours\": 120.5,\n  \"trophies_earned\": 50,\n  \"platform\": \"playstation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/playstation/games/manual",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "playstation", "games", "manual"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Disconnect",
+      "item": [
+        {
+          "name": "Disconnect PlayStation Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/playstation/disconnect",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "playstation", "disconnect"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

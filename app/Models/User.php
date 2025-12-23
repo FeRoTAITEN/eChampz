@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -111,5 +112,29 @@ class User extends Authenticatable implements MustVerifyEmail
     public function mentionedInPosts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_mentions');
+    }
+
+    /**
+     * Get the platform accounts for the user.
+     */
+    public function platformAccounts(): HasMany
+    {
+        return $this->hasMany(PlatformAccount::class);
+    }
+
+    /**
+     * Get the PlayStation account for the user.
+     */
+    public function playstationAccount(): HasOne
+    {
+        return $this->hasOne(PlatformAccount::class)->where('platform', 'playstation');
+    }
+
+    /**
+     * Get the games for the user.
+     */
+    public function games(): HasMany
+    {
+        return $this->hasMany(UserGame::class);
     }
 }

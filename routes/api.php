@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
 use App\Http\Controllers\Api\V1\OnboardingController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
+use App\Http\Controllers\Api\V1\PlayStationController;
 use App\Http\Controllers\Api\V1\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +76,16 @@ Route::prefix('v1')->group(function () {
             Route::middleware('role:recruiter')->prefix('recruiter')->group(function () {
                 Route::get('/', fn() => response()->json(['success' => true, 'message' => 'Recruiter dashboard']));
             });
+
+            // PlayStation Integration routes
+            Route::prefix('playstation')->group(function () {
+                Route::get('/status', [PlayStationController::class, 'status']);
+                Route::post('/link', [PlayStationController::class, 'link']);
+                Route::post('/sync', [PlayStationController::class, 'sync']);
+                Route::get('/games', [PlayStationController::class, 'games']);
+                Route::post('/games/manual', [PlayStationController::class, 'addGameManually']);
+                Route::delete('/disconnect', [PlayStationController::class, 'disconnect']);
+            });
         });
 
     });
@@ -84,6 +95,6 @@ Route::prefix('v1')->group(function () {
 Route::get('/health', function () {
     return response()->json([
         'status' => 'ok',
-        'timestamp' => now()->toISOString(),
+        'timestamp' => now()->toIso8601String(),
     ]);
 });
