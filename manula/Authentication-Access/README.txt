@@ -39,6 +39,19 @@ Password Reset
 
 Authenticated Endpoints (Authorization: Bearer {token})
 - GET /api/v1/user
+  returns current user with all profile data including avatar and avatar_url.
+  notes: avatar_url is computed automatically from avatar path.
+
+- PUT /api/v1/user
+  body (all optional, multipart/form-data): name, represent_type, organization_name, position, avatar (file)
+  notes:
+    - avatar: image file (jpeg, png, jpg, gif), max 2MB
+    - avatar stored in storage/app/public/avatars/
+    - automatically deletes old avatar when uploading new one
+    - only provided fields are updated
+    - email, username, and date_of_birth are NOT editable
+    - returns updated user with avatar_url computed
+
 - POST /api/v1/logout
 - POST /api/v1/logout-all
 
@@ -71,6 +84,9 @@ Expirations
 Notes
 - In production, codes are sent via email; in local/testing they are returned for convenience.
 - All responses follow the ApiResponse helper (success flag, message, data).
+- Avatar uploads require multipart/form-data content type.
+- Avatars accessible via: {APP_URL}/storage/avatars/{filename}
+- Requires php artisan storage:link to be run once for avatar access.
 
 Testing
 - php artisan test

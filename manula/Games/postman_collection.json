@@ -1,0 +1,132 @@
+{
+  "info": {
+    "name": "Games & Favorites",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - Games catalog and user favorites management"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Games Catalog",
+      "item": [
+        {
+          "name": "List All Games",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/games?per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "games"],
+              "query": [
+                { "key": "per_page", "value": "20" },
+                { "key": "search", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Games",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/games?search=Call&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "games"],
+              "query": [
+                { "key": "search", "value": "Call" },
+                { "key": "per_page", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Favorite Games",
+      "item": [
+        {
+          "name": "Get My Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/favorite-games",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "favorite-games"]
+            }
+          }
+        },
+        {
+          "name": "Add to Favorites",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/favorite-games",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "favorite-games"]
+            }
+          }
+        },
+        {
+          "name": "Set/Replace All Favorites",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game_ids\": [5, 8, 12]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/favorite-games",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "favorite-games"]
+            }
+          }
+        },
+        {
+          "name": "Remove from Favorites",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/favorite-games/5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "favorite-games", "5"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

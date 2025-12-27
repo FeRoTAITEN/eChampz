@@ -49,6 +49,10 @@ XP Mapping
 - Represent: 15 XP (recruiter only)
 - Completion bonus (all required steps done): 20 XP
 - XP is recorded in xp_transactions (unique per step) and aggregated into users.xp_total.
+- User rank is automatically updated based on total XP:
+  * Bronze: 0-99 XP
+  * Silver: 100-499 XP
+  * Gold: 500+ XP
 
 Rules & Notes
 - All steps require Authorization: Bearer {token}.

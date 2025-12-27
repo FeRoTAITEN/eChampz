@@ -1,0 +1,71 @@
+{
+  "info": {
+    "name": "Leaderboards & Rankings",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - Leaderboards, rankings, and XP system"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "All-Time Leaderboard",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/leaderboard/all-time?per_page=50",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "leaderboard", "all-time"],
+          "query": [
+            { "key": "per_page", "value": "50" },
+            { "key": "page", "value": "1", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Monthly Leaderboard",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/leaderboard/monthly?per_page=50",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "leaderboard", "monthly"],
+          "query": [
+            { "key": "per_page", "value": "50" },
+            { "key": "page", "value": "1", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Weekly Leaderboard",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/leaderboard/weekly?per_page=50",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "leaderboard", "weekly"],
+          "query": [
+            { "key": "per_page", "value": "50" },
+            { "key": "page", "value": "1", "disabled": true }
+          ]
+        }
+      }
+    }
+  ]
+}
+

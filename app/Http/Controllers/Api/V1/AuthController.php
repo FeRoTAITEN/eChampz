@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Enum;
 
@@ -109,6 +110,59 @@ class AuthController extends BaseController
     public function user(Request $request): JsonResponse
     {
         return $this->successResponse($request->user());
+    }
+
+    /**
+     * Update authenticated user profile
+     */
+    public function update(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['nullable', 'string', 'max:255'],
+            'represent_type' => ['nullable', 'string'],
+            'organization_name' => ['nullable', 'string', 'max:255'],
+            'position' => ['nullable', 'string', 'max:255'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->validationErrorResponse($validator->errors());
+        }
+
+        $user = $request->user();
+
+        // Update basic fields
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('represent_type')) {
+            $user->represent_type = $request->represent_type;
+        }
+
+        if ($request->has('organization_name')) {
+            $user->organization_name = $request->organization_name;
+        }
+
+        if ($request->has('position')) {
+            $user->position = $request->position;
+        }
+
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            // Store new avatar
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+        }
+
+        $user->save();
+
+        return $this->successResponse($user, 'Profile updated successfully');
     }
 
     /**

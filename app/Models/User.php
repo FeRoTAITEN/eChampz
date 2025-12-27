@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRank;
 use App\Enums\UserRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'avatar',
         'date_of_birth',
         'represent_type',
         'organization_name',
@@ -44,6 +46,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'avatar_url',
+        'rank',
     ];
 
     /**
@@ -131,10 +143,39 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the games for the user.
+     * Get the platform-linked games for the user (PlayStation, etc.).
      */
-    public function games(): HasMany
+    public function platformGames(): HasMany
     {
         return $this->hasMany(UserGame::class);
+    }
+
+    /**
+     * Get the user's favorite games (from catalog).
+     */
+    public function favoriteGames(): BelongsToMany
+    {
+        return $this->belongsToMany(Game::class, 'game_user')->withTimestamps();
+    }
+
+    /**
+     * Get the avatar URL attribute.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (!$this->avatar) {
+            return null;
+        }
+
+        return asset('storage/' . $this->avatar);
+    }
+
+    /**
+     * Get user's rank based on current XP (computed).
+     */
+    public function getRankAttribute(): ?string
+    {
+        $rankModel = Rank::getRankForXp($this->xp_total);
+        return $rankModel ? $rankModel->name : 'bronze';
     }
 }

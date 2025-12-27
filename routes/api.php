@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EmailVerificationController;
+use App\Http\Controllers\Api\V1\GameController;
+use App\Http\Controllers\Api\V1\LeaderboardController;
 use App\Http\Controllers\Api\V1\OnboardingController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\PlayStationController;
@@ -37,6 +39,7 @@ Route::prefix('v1')->group(function () {
 
         // Auth routes
         Route::get('/user', [AuthController::class, 'user']);
+        Route::put('/user', [AuthController::class, 'update']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/logout-all', [AuthController::class, 'logoutAll']);
 
@@ -57,6 +60,19 @@ Route::prefix('v1')->group(function () {
 
         // Routes that require verified email
         Route::middleware('verified')->group(function () {
+
+            // Games routes
+            Route::prefix('games')->group(function () {
+                Route::get('/', [GameController::class, 'index']); // List all games
+            });
+
+            // User's favorite games routes
+            Route::prefix('user/favorite-games')->group(function () {
+                Route::get('/', [GameController::class, 'getFavorites']); // Get favorites
+                Route::post('/', [GameController::class, 'addFavorites']); // Add to favorites
+                Route::put('/', [GameController::class, 'setFavorites']); // Replace all favorites
+                Route::delete('/{gameId}', [GameController::class, 'removeFavorite']); // Remove from favorites
+            });
 
             // Posts routes
             Route::prefix('posts')->group(function () {
@@ -85,6 +101,13 @@ Route::prefix('v1')->group(function () {
                 Route::get('/games', [PlayStationController::class, 'games']);
                 Route::post('/games/manual', [PlayStationController::class, 'addGameManually']);
                 Route::delete('/disconnect', [PlayStationController::class, 'disconnect']);
+            });
+
+            // Leaderboard routes
+            Route::prefix('leaderboard')->group(function () {
+                Route::get('/all-time', [LeaderboardController::class, 'allTime']);
+                Route::get('/monthly', [LeaderboardController::class, 'monthly']);
+                Route::get('/weekly', [LeaderboardController::class, 'weekly']);
             });
         });
 

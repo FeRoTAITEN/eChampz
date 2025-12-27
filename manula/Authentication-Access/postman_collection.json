@@ -138,6 +138,30 @@
           }
         },
         {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Updated Name", "type": "text" },
+                { "key": "represent_type", "value": "individual", "type": "text" },
+                { "key": "organization_name", "value": "Gaming Org", "type": "text" },
+                { "key": "position", "value": "Pro Player", "type": "text" },
+                { "key": "avatar", "type": "file", "src": "" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user"]
+            }
+          }
+        },
+        {
           "name": "Logout",
           "request": {
             "method": "POST",
