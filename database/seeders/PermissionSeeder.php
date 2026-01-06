@@ -33,6 +33,21 @@ class PermissionSeeder extends Seeder
                 'slug' => 'permissions',
                 'description' => 'Assign and revoke admin permissions',
             ],
+            [
+                'name' => 'Manage FAQs',
+                'slug' => 'faqs',
+                'description' => 'Create, edit, and manage frequently asked questions',
+            ],
+            [
+                'name' => 'Manage Feedback',
+                'slug' => 'feedback',
+                'description' => 'View and manage user feedback submissions',
+            ],
+            [
+                'name' => 'Manage Tickets',
+                'slug' => 'tickets',
+                'description' => 'View, assign, and respond to support tickets',
+            ],
         ];
 
         foreach ($permissions as $permission) {

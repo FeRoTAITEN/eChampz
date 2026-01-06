@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "Tickets",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - Support Ticket System"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create Support Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Account Access Issue\",\n  \"description\": \"I cannot access my account. Please help.\",\n  \"category\": \"account\",\n  \"priority\": \"high\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"]
+        },
+        "description": "Create a new support ticket"
+      }
+    },
+    {
+      "name": "Create Bug Report Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Login Button Not Working\",\n  \"description\": \"The login button does not respond when clicked on mobile.\",\n  \"category\": \"bug\",\n  \"priority\": \"urgent\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"]
+        },
+        "description": "Create a bug report ticket"
+      }
+    },
+    {
+      "name": "Create Feature Request Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Dark Mode Feature\",\n  \"description\": \"Can you please add a dark mode option?\",\n  \"category\": \"feature\",\n  \"priority\": \"medium\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"]
+        },
+        "description": "Create a feature request ticket"
+      }
+    },
+    {
+      "name": "List My Tickets",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"]
+        },
+        "description": "Get all tickets created by current user"
+      }
+    },
+    {
+      "name": "Get Ticket Details",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets", "1"]
+        },
+        "description": "Get ticket details with responses and attachments"
+      }
+    },
+    {
+      "name": "Filter Tickets by Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets?status=open",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"],
+          "query": [
+            { "key": "status", "value": "open" }
+          ]
+        },
+        "description": "Get tickets filtered by status"
+      }
+    },
+    {
+      "name": "Filter Tickets by Priority",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets?priority=high",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"],
+          "query": [
+            { "key": "priority", "value": "high" }
+          ]
+        },
+        "description": "Get tickets filtered by priority"
+      }
+    },
+    {
+      "name": "Filter Tickets by Category",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets?category=bug",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets"],
+          "query": [
+            { "key": "category", "value": "bug" }
+          ]
+        },
+        "description": "Get tickets filtered by category"
+      }
+    },
+    {
+      "name": "Add Response to Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"I've tried clearing my cache but the issue persists.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets/1/responses",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets", "1", "responses"]
+        },
+        "description": "Add a response to a ticket"
+      }
+    },
+    {
+      "name": "Upload Attachment to Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "response_id",
+              "value": "1",
+              "type": "text",
+              "description": "Optional: Attach to a specific response"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/tickets/1/attachments",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "tickets", "1", "attachments"]
+        },
+        "description": "Upload an attachment to a ticket (max 10MB, allowed: jpg, jpeg, png, gif, pdf, doc, docx)"
+      }
+    }
+  ]
+}
+

@@ -16,12 +16,13 @@ class AdminPermission
      */
     public function handle(Request $request, Closure $next, string $permission): Response
     {
-        $admin = Auth::guard('admin')->user();
-
-        if (!$admin) {
+        if (!Auth::guard('admin')->check()) {
             return redirect()->route('admin.login');
         }
 
+        $admin = Auth::guard('admin')->user();
+
+        // Check permission - super admins automatically pass
         if (!$admin->hasPermission($permission)) {
             abort(403, 'You do not have permission to access this resource.');
         }

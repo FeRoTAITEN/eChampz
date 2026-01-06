@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -61,6 +62,7 @@ class Admin extends Authenticatable
     public function hasPermission(string $slug): bool
     {
         // Super admins have all permissions
+        // Access the attribute directly - Laravel's casting will handle the conversion
         if ($this->is_super_admin) {
             return true;
         }
@@ -110,6 +112,22 @@ class Admin extends Authenticatable
     public function syncPermissions(array $permissionIds): void
     {
         $this->permissions()->sync($permissionIds);
+    }
+
+    /**
+     * Get the tickets assigned to this admin.
+     */
+    public function assignedTickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class, 'assigned_to');
+    }
+
+    /**
+     * Get the ticket responses created by this admin.
+     */
+    public function ticketResponses(): HasMany
+    {
+        return $this->hasMany(TicketResponse::class, 'admin_id');
     }
 }
 

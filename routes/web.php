@@ -3,7 +3,10 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Livewire\Admin\AdminList;
 use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\FaqList;
+use App\Livewire\Admin\FeedbackList;
 use App\Livewire\Admin\PermissionList;
+use App\Livewire\Admin\TicketList;
 use App\Livewire\Admin\UserList;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +60,21 @@ Route::prefix('admin')->group(function () {
         // Permission management
         Route::middleware('admin.permission:permissions')->group(function () {
             Route::get('/permissions', PermissionList::class)->name('admin.permissions');
+        });
+
+        // FAQs management
+        Route::middleware('admin.permission:faqs')->group(function () {
+            Route::get('/faqs', FaqList::class)->name('admin.faqs');
+        });
+
+        // Feedback management
+        Route::middleware('admin.permission:feedback')->group(function () {
+            Route::get('/feedback', FeedbackList::class)->name('admin.feedback');
+        });
+
+        // Tickets management
+        Route::middleware('admin.permission:tickets')->group(function () {
+            Route::get('/tickets', TicketList::class)->name('admin.tickets');
         });
     });
 });

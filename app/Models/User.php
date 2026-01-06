@@ -159,6 +159,30 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the feedback submitted by the user.
+     */
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
+    /**
+     * Get the tickets created by the user.
+     */
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    /**
+     * Get the ticket responses created by the user.
+     */
+    public function ticketResponses(): HasMany
+    {
+        return $this->hasMany(TicketResponse::class);
+    }
+
+    /**
      * Get the avatar URL attribute.
      */
     public function getAvatarUrlAttribute(): ?string

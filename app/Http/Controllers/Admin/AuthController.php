@@ -32,9 +32,28 @@ class AuthController extends Controller
         ]);
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('admin.dashboard'));
+            // Get the response
+            $response = redirect()->intended(route('admin.dashboard'));
+            
+            // Manually set the session cookie with correct expiration (120 minutes from now)
+            $sessionName = config('session.cookie');
+            $sessionId = $request->session()->getId();
+            $minutes = config('session.lifetime', 120);
+            
+            // Create cookie with correct expiration time (minutes * 60 to convert to seconds)
+            $cookie = cookie(
+                $sessionName,
+                $sessionId,
+                $minutes, // Laravel's cookie() helper expects minutes, not seconds
+                config('session.path', '/'),
+                config('session.domain', null),
+                config('session.secure', false),
+                config('session.http_only', true),
+                false,
+                config('session.same_site', 'lax')
+            );
+            
+            return $response->withCookie($cookie);
         }
 
         throw ValidationException::withMessages([

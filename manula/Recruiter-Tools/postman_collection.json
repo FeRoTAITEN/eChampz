@@ -1,0 +1,220 @@
+{
+  "info": {
+    "name": "Recruiter Tools",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - Recruiter tools for searching and viewing gamer profiles"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Search Gamers",
+      "item": [
+        {
+          "name": "Search All Gamers",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/search?per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "search"],
+              "query": [
+                { "key": "per_page", "value": "20" },
+                { "key": "page", "value": "1", "disabled": true },
+                { "key": "game_id", "value": "", "disabled": true },
+                { "key": "rank", "value": "", "disabled": true },
+                { "key": "region", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Game",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/search?game_id=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "search"],
+              "query": [
+                { "key": "game_id", "value": "1" },
+                { "key": "per_page", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Rank - Bronze",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/search?rank=bronze&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "search"],
+              "query": [
+                { "key": "rank", "value": "bronze" },
+                { "key": "per_page", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Rank - Silver",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/search?rank=silver&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "search"],
+              "query": [
+                { "key": "rank", "value": "silver" },
+                { "key": "per_page", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Rank - Gold",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/search?rank=gold&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "search"],
+              "query": [
+                { "key": "rank", "value": "gold" },
+                { "key": "per_page", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by Game and Rank",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/search?game_id=1&rank=silver&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "search"],
+              "query": [
+                { "key": "game_id", "value": "1" },
+                { "key": "rank", "value": "silver" },
+                { "key": "per_page", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gamer Cards",
+      "item": [
+        {
+          "name": "Get Gamer Cards",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/gamer-cards?per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "gamer-cards"],
+              "query": [
+                { "key": "per_page", "value": "20" },
+                { "key": "page", "value": "1", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Gamer Cards - Page 2",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/gamer-cards?per_page=20&page=2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "gamer-cards"],
+              "query": [
+                { "key": "per_page", "value": "20" },
+                { "key": "page", "value": "2" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gamer Profile",
+      "item": [
+        {
+          "name": "View Full Gamer Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/gamer-profile/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "gamer-profile", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact Link",
+      "item": [
+        {
+          "name": "Get Contact Information",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/recruiter/contact-link/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "recruiter", "contact-link", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

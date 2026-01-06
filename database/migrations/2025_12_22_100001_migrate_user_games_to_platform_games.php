@@ -17,21 +17,53 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Step 1: Migrate existing games to platform_games
-        DB::statement("
-            INSERT INTO platform_games (platform, platform_game_id, name, icon_url, metadata, created_at, updated_at)
-            SELECT DISTINCT 
-                COALESCE(platform, 'playstation') as platform,
-                platform_game_id,
-                game_name as name,
-                game_icon_url as icon_url,
-                JSON_OBJECT() as metadata,
-                MIN(created_at) as created_at,
-                MAX(updated_at) as updated_at
-            FROM user_games
-            GROUP BY platform, platform_game_id, game_name, game_icon_url
-            ON DUPLICATE KEY UPDATE updated_at = VALUES(updated_at)
-        ");
+        // Skip migration if table doesn't exist or already has new structure
+        // New structure = no game_name column (meaning it was created fresh)
+        if (!Schema::hasTable('user_games') || !Schema::hasColumn('user_games', 'game_name')) {
+            // Table was created with new structure, skip this migration
+            return;
+        }
+
+        // Check if user_games table has old structure (game_name column) and has data
+        $hasOldStructure = Schema::hasColumn('user_games', 'game_name') &&
+                          DB::table('user_games')->count() > 0;
+
+        // Step 1: Migrate existing games to platform_games (only if old structure exists)
+        if ($hasOldStructure) {
+            $driver = DB::getDriverName();
+            
+            if ($driver === 'mysql' || $driver === 'mariadb') {
+                DB::statement("
+                    INSERT INTO platform_games (platform, platform_game_id, name, icon_url, metadata, created_at, updated_at)
+                    SELECT DISTINCT 
+                        COALESCE(platform, 'playstation') as platform,
+                        platform_game_id,
+                        game_name as name,
+                        game_icon_url as icon_url,
+                        JSON_OBJECT() as metadata,
+                        MIN(created_at) as created_at,
+                        MAX(updated_at) as updated_at
+                    FROM user_games
+                    GROUP BY platform, platform_game_id, game_name, game_icon_url
+                    ON DUPLICATE KEY UPDATE updated_at = VALUES(updated_at)
+                ");
+            } else {
+                // SQLite-compatible version
+                DB::statement("
+                    INSERT OR IGNORE INTO platform_games (platform, platform_game_id, name, icon_url, metadata, created_at, updated_at)
+                    SELECT DISTINCT 
+                        COALESCE(platform, 'playstation') as platform,
+                        platform_game_id,
+                        game_name as name,
+                        game_icon_url as icon_url,
+                        '{}' as metadata,
+                        MIN(created_at) as created_at,
+                        MAX(updated_at) as updated_at
+                    FROM user_games
+                    GROUP BY platform, platform_game_id, game_name, game_icon_url
+                ");
+            }
+        }
 
         // Step 2: Add platform_game_id foreign key column (temporary, will be renamed)
         Schema::table('user_games', function (Blueprint $table) {
@@ -39,30 +71,77 @@ return new class extends Migration
                 ->constrained('platform_games')->cascadeOnDelete();
         });
 
-        // Step 3: Populate the foreign key
-        DB::statement("
-            UPDATE user_games ug
-            INNER JOIN platform_games pg ON 
-                ug.platform_game_id = pg.platform_game_id 
-                AND COALESCE(ug.platform, 'playstation') = pg.platform
-            SET ug.platform_game_ref_id = pg.id
-        ");
+        // Step 3: Populate the foreign key (only if old structure exists)
+        if ($hasOldStructure) {
+            $driver = DB::getDriverName();
+            
+            if ($driver === 'mysql' || $driver === 'mariadb') {
+                DB::statement("
+                    UPDATE user_games ug
+                    INNER JOIN platform_games pg ON 
+                        ug.platform_game_id = pg.platform_game_id 
+                        AND COALESCE(ug.platform, 'playstation') = pg.platform
+                    SET ug.platform_game_ref_id = pg.id
+                ");
+            } else {
+                // SQLite-compatible version
+                DB::statement("
+                    UPDATE user_games
+                    SET platform_game_ref_id = (
+                        SELECT pg.id
+                        FROM platform_games pg
+                        WHERE pg.platform_game_id = user_games.platform_game_id
+                        AND pg.platform = COALESCE(user_games.platform, 'playstation')
+                        LIMIT 1
+                    )
+                ");
+            }
+        }
 
-        // Step 4: Drop old unique constraint
-        Schema::table('user_games', function (Blueprint $table) {
-            $table->dropUnique(['user_id', 'platform_account_id', 'platform_game_id']);
-        });
+        // Step 4: Drop old unique constraint (if it exists)
+        if (Schema::hasTable('user_games')) {
+            try {
+                Schema::table('user_games', function (Blueprint $table) {
+                    $table->dropUnique(['user_id', 'platform_account_id', 'platform_game_id']);
+                });
+            } catch (\Exception $e) {
+                // Constraint might not exist, continue
+            }
+        }
 
-        // Step 5: Drop old platform_game_id string column
-        DB::statement('ALTER TABLE user_games DROP COLUMN platform_game_id');
+        // Step 5-7: Only modify structure if old columns exist
+        if ($hasOldStructure) {
+            // Drop old platform_game_id string column
+            $driver = DB::getDriverName();
+            if ($driver === 'mysql' || $driver === 'mariadb') {
+                DB::statement('ALTER TABLE user_games DROP COLUMN platform_game_id');
+                DB::statement('ALTER TABLE user_games CHANGE platform_game_ref_id platform_game_id BIGINT UNSIGNED NOT NULL');
+            } else {
+                // SQLite doesn't support DROP COLUMN directly, use schema modification
+                Schema::table('user_games', function (Blueprint $table) {
+                    $table->dropColumn('platform_game_id');
+                });
+                // Rename is handled differently in SQLite
+                DB::statement('ALTER TABLE user_games RENAME COLUMN platform_game_ref_id TO platform_game_id');
+            }
 
-        // Step 6: Rename platform_game_ref_id to platform_game_id
-        DB::statement('ALTER TABLE user_games CHANGE platform_game_ref_id platform_game_id BIGINT UNSIGNED NOT NULL');
-
-        // Step 7: Remove old columns
-        Schema::table('user_games', function (Blueprint $table) {
-            $table->dropColumn(['game_name', 'game_icon_url', 'platform']);
-        });
+            // Remove old columns
+            Schema::table('user_games', function (Blueprint $table) {
+                $table->dropColumn(['game_name', 'game_icon_url', 'platform']);
+            });
+        } else {
+            // If no old structure, check if we need to rename platform_game_ref_id
+            // Only rename if platform_game_ref_id exists AND platform_game_id doesn't exist
+            if (Schema::hasColumn('user_games', 'platform_game_ref_id') && 
+                !Schema::hasColumn('user_games', 'platform_game_id')) {
+                $driver = DB::getDriverName();
+                if ($driver === 'mysql' || $driver === 'mariadb') {
+                    DB::statement('ALTER TABLE user_games CHANGE platform_game_ref_id platform_game_id BIGINT UNSIGNED NOT NULL');
+                } else {
+                    DB::statement('ALTER TABLE user_games RENAME COLUMN platform_game_ref_id TO platform_game_id');
+                }
+            }
+        }
 
         // Step 8: Add unique constraint back
         Schema::table('user_games', function (Blueprint $table) {

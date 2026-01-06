@@ -86,6 +86,53 @@ API Modules
    - GET /api/v1/leaderboard/monthly
    - GET /api/v1/leaderboard/weekly
 
+📁 Recruiter-Tools/
+   - Search gamers by game, rank, or region
+   - View gamer cards (basic info + XP)
+   - View full gamer profiles
+   - Get contact information for gamers
+   - Recruiter-only access (requires recruiter role)
+   
+   Key Endpoints:
+   - GET /api/v1/recruiter/search
+   - GET /api/v1/recruiter/gamer-cards
+   - GET /api/v1/recruiter/gamer-profile/{id}
+   - GET /api/v1/recruiter/contact-link/{id}
+
+📁 FAQs/
+   - Browse frequently asked questions
+   - Search FAQs by question or answer
+   - Filter by category
+   - Public API (no authentication required)
+   
+   Key Endpoints:
+   - GET /api/v1/faqs
+   - GET /api/v1/faqs/{id}
+
+📁 Feedback/
+   - Submit user feedback
+   - Bug reports and feature requests
+   - View feedback history
+   - Requires authentication
+   
+   Key Endpoints:
+   - POST /api/v1/feedback
+   - GET /api/v1/feedback
+
+📁 Tickets/
+   - Create support tickets
+   - Manage ticket conversations
+   - Upload attachments
+   - Track ticket status and priority
+   - Requires authentication
+   
+   Key Endpoints:
+   - POST /api/v1/tickets
+   - GET /api/v1/tickets
+   - GET /api/v1/tickets/{id}
+   - POST /api/v1/tickets/{id}/responses
+   - POST /api/v1/tickets/{id}/attachments
+
 Base Configuration
 ------------------
 Base URL: http://localhost:8000
@@ -170,5 +217,40 @@ For more information, see:
 - DATABASE_DESIGN.md (in project root)
 - PROJECT_SUMMARY.txt (in project root)
 
-Last Updated: December 27, 2025
+Last Updated: January 6, 2026
+
+Recruiter Tools Note
+--------------------
+The Recruiter-Tools module requires:
+- Recruiter role (role:recruiter)
+- Verified email
+- Valid authentication token
+
+Only recruiters can access these endpoints to search and view gamer profiles.
+
+Support & Help Modules
+-----------------------
+The FAQs, Feedback, and Tickets modules provide comprehensive user support:
+
+FAQs (Public):
+- No authentication required
+- Browse categorized frequently asked questions
+- Search functionality across questions and answers
+- View counter for popular FAQs
+
+Feedback:
+- Submit general feedback, bug reports, or feature requests
+- Track feedback status (new, reviewed, resolved)
+- View your own feedback history
+- Requires authenticated user with verified email
+
+Tickets:
+- Full-featured support ticket system
+- Auto-generated unique ticket numbers (TKT-YYYYMMDD-XXX)
+- Categories: bug, feature, support, account, other
+- Priorities: low, medium, high, urgent
+- Status tracking: open, in_progress, resolved, closed
+- Conversation threads with user and admin responses
+- File attachments support (max 10MB, images, PDF, DOC, DOCX)
+- Requires authenticated user with verified email
 

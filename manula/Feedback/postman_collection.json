@@ -1,0 +1,144 @@
+{
+  "info": {
+    "name": "Feedback",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "eChampz API - User Feedback Submission"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Submit General Feedback",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Great platform!\",\n  \"message\": \"I really love using eChampz. Keep up the good work!\",\n  \"type\": \"general\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"]
+        },
+        "description": "Submit general feedback"
+      }
+    },
+    {
+      "name": "Submit Bug Report",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Login Issue on Mobile\",\n  \"message\": \"I am experiencing issues logging in on mobile devices.\",\n  \"type\": \"bug\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"]
+        },
+        "description": "Submit a bug report"
+      }
+    },
+    {
+      "name": "Submit Feature Request",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"subject\": \"Dark Mode Request\",\n  \"message\": \"Can you please add a dark mode option?\",\n  \"type\": \"feature\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"]
+        },
+        "description": "Submit a feature request"
+      }
+    },
+    {
+      "name": "Get My Feedback",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"]
+        },
+        "description": "Get all feedback submitted by current user"
+      }
+    },
+    {
+      "name": "Get Feedback by Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback?status=new",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"],
+          "query": [
+            { "key": "status", "value": "new" }
+          ]
+        },
+        "description": "Get feedback filtered by status"
+      }
+    },
+    {
+      "name": "Get Feedback by Type",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback?type=bug",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"],
+          "query": [
+            { "key": "type", "value": "bug" }
+          ]
+        },
+        "description": "Get feedback filtered by type"
+      }
+    },
+    {
+      "name": "Get Feedback with Pagination",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/feedback?per_page=10&page=1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "feedback"],
+          "query": [
+            { "key": "per_page", "value": "10" },
+            { "key": "page", "value": "1" }
+          ]
+        },
+        "description": "Get feedback with custom pagination"
+      }
+    }
+  ]
+}
+
