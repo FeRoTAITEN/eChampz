@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
 
     // Public routes (no authentication required)
-    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
-    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:120,1');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:120,1');
     Route::get('/roles', [AuthController::class, 'roles']);
 
     // FAQs routes (public)
@@ -39,9 +39,9 @@ Route::prefix('v1')->group(function () {
 
     // Password Reset routes
     Route::prefix('password')->group(function () {
-        Route::post('/forgot', [PasswordResetController::class, 'forgotPassword'])->middleware('throttle:5,1');
-        Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->middleware('throttle:5,1');
-        Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->middleware('throttle:5,1');
+        Route::post('/forgot', [PasswordResetController::class, 'forgotPassword'])->middleware('throttle:120,1');
+        Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->middleware('throttle:120,1');
+        Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->middleware('throttle:120,1');
     });
 
     // Authenticated routes (but email may not be verified)
@@ -55,8 +55,8 @@ Route::prefix('v1')->group(function () {
 
         // Email verification routes
         Route::prefix('email')->group(function () {
-            Route::post('/send-verification', [EmailVerificationController::class, 'sendCode'])->middleware('throttle:5,1');
-            Route::post('/verify', [EmailVerificationController::class, 'verify'])->middleware('throttle:5,1');
+            Route::post('/send-verification', [EmailVerificationController::class, 'sendCode'])->middleware('throttle:120,1');
+            Route::post('/verify', [EmailVerificationController::class, 'verify'])->middleware('throttle:120,1');
             Route::get('/status', [EmailVerificationController::class, 'status']);
         });
 

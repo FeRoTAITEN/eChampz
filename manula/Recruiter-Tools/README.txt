@@ -6,7 +6,7 @@ Base URL
 - Prefix: /api/v1
 - Auth: Bearer token via Laravel Sanctum
 - Requires: Authentication + Verified Email + Recruiter Role
-- Global rate limit: 60 requests/minute
+- Global rate limit: 120 requests/minute
 
 Authenticated Endpoints (Authorization: Bearer {token} + verified email + recruiter role)
 - GET    /api/v1/recruiter/search              Search gamers by Game, Rank, or Region

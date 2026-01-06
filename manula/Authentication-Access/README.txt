@@ -5,8 +5,8 @@ Base URL
 - Local: http://localhost:8000
 - Prefix: /api/v1 unless stated (health is /api/health)
 - Auth: Bearer token via Laravel Sanctum
-- Global rate limit: 60 requests/minute
-- Sensitive endpoints throttled 5 req/min: register, login, password/forgot, password/verify-code, password/reset, email/send-verification, email/verify
+- Global rate limit: 120 requests/minute
+- Sensitive endpoints throttled 120 req/min: register, login, password/forgot, password/verify-code, password/reset, email/send-verification, email/verify
 - Email validation: RFC+DNS check (email:rfc,dns)
 
 Public Endpoints
@@ -27,15 +27,15 @@ Public Endpoints
 Password Reset
 - POST /api/v1/password/forgot
   body: email
-  notes: generic response even if email not found (prevents account enumeration); returns reset code in local/testing; code expires in 60 minutes; throttled 5/min.
+  notes: generic response even if email not found (prevents account enumeration); returns reset code in local/testing; code expires in 60 minutes; throttled 120/min.
 
 - POST /api/v1/password/verify-code
   body: email, code (6 digits)
-  result: reset_token (temporary); expires in 15 minutes; throttled 5/min.
+  result: reset_token (temporary); expires in 15 minutes; throttled 120/min.
 
 - POST /api/v1/password/reset
   body: email, reset_token, password, password_confirmation
-  result: resets password, revokes all tokens; throttled 5/min.
+  result: resets password, revokes all tokens; throttled 120/min.
 
 Authenticated Endpoints (Authorization: Bearer {token})
 - GET /api/v1/user
@@ -57,10 +57,10 @@ Authenticated Endpoints (Authorization: Bearer {token})
 
 Email Verification (requires auth)
 - POST /api/v1/email/send-verification
-  sends 6-digit code (returned in local/testing); code expires in 30 minutes; throttled 5/min.
+  sends 6-digit code (returned in local/testing); code expires in 30 minutes; throttled 120/min.
 
 - POST /api/v1/email/verify
-  body: code (6 digits); throttled 5/min.
+  body: code (6 digits); throttled 120/min.
 
 - GET /api/v1/email/status
   returns verified flag, email, verified_at.

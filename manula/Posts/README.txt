@@ -6,7 +6,7 @@ Base URL
 - Prefix: /api/v1
 - Auth: Bearer token via Laravel Sanctum
 - Requires: Authentication + Verified Email
-- Global rate limit: 60 requests/minute
+- Global rate limit: 120 requests/minute
 
 Authenticated Endpoints (Authorization: Bearer {token} + verified email)
 - GET    /api/v1/posts              Get feed (global or following)

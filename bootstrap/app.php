@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Rate limiting
-        $middleware->throttleApi('60,1');
+        $middleware->throttleApi('120,1');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Handle API exceptions with JSON responses

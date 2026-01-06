@@ -144,8 +144,8 @@ Header: Authorization: Bearer {your_token}
 
 Rate Limiting
 -------------
-- Global: 60 requests/minute
-- Sensitive endpoints (login, register, password reset, email verification): 5 requests/minute
+- Global: 120 requests/minute
+- Sensitive endpoints (login, register, password reset, email verification): 120 requests/minute
 
 Common Response Format
 ----------------------
